@@ -14,35 +14,55 @@ public class HandleTextTest {
 
     @Test
     public void testCharCount(){
+        //Testar funktionen som räknar antal tecken i strängen
 
         String inputString = "Jag testar att skriva en massa ord stop";
         HandleText myTextHandler = new HandleText(inputString);
 
         assertEquals(35,myTextHandler.charCount);
     }
+    @Test
     public void testRowCount(){
-
-        int rows;
+        //Testar funktionen som kontrollerar antalet rader från inläsningen
         String inputString = "Jag testar att skriva en massa ord stop";
+        int rows=2;
         HandleText myTextHandler = new HandleText(inputString);
 
-        assertEquals(35,myTextHandler.charCount);
+        assertEquals(2,myTextHandler.rowCount);
 
     }
+    @Test
     public void testLongestWord(){
+        //Testar funktionen som ska hitta det längsta ordet.
+        // Om flera ord är lika långa och är de längsta orden väljs
+        // det första längsta ordet ut.
 
-        assertEquals(true, blnOK);
+        String inputString = "Jag testar att skriva en massa ord stop";
+        int rows=2;
+        HandleText myTextHandler = new HandleText(inputString);
+
+        assertEquals("testar", myTextHandler.getLongestWord();
     }
+    @Test
     public void testWordsTotal(){
 
-        assertEquals(true, blnOK);
+        //Testar funktionen som räknar antalet ord
+
+        String inputString = "Jag testar att skriva en massa ord stop";
+        int rows=2;
+        HandleText myTextHandler = new HandleText(inputString);
+
+        assertEquals(7, myTextHandler.wordsTotal());
     }
+    @Test
     public void testStopWord(){
 
-        assertEquals(true, blnOK);
+        //testar funktionen som ska upptäcka om ordet "stop" har skrivits
+
+        String inputString = "Jag testar att skriva en massa ord stop";
+        int rows=2;
+        HandleText myTextHandler = new HandleText(inputString);
+
+        assertEquals(true, myTextHandler.stopWord());
     }
-
-
-
-
 }

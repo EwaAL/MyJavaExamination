@@ -1,3 +1,4 @@
+
 public class HandleText {
 
 
@@ -25,47 +26,72 @@ public class HandleText {
 
     public boolean readLine(String inputString) {
 
-        inputString = checkStopWord(inputString);
-
-        text = text + inputString;
         rows++;
-
+        inputString = checkStopWord(inputString);
+        if (!inputString.isEmpty()) {
+            text = text + inputString;
+        }
         return stop;
-
     }
 
     private String checkStopWord(String text) {
-        String stopWord = "";
-        //om texten endast består av ordet "stop" i någon form ska metoden returnera en tom string
-        if (text.equals("stop") || text.equals("stopp") || text.equals("Stop") || text.equals("Stopp")) {
-            stop = true;
-            return "";
-            //om texten innehåller ordet "stop" i någon form ska stopp-ordet och ev efterkommande text tas bort från texten
-        } else if (text.contains("stop") || text.contains("stopp") || text.contains("Stop") || text.contains("Stopp")) {
 
+        String stopWord = "";
+
+        if (text.equals("stop") || text.equals("stopp") || text.equals("Stop") || text.equals("Stopp")) {
+            //om texten endast består av ordet "stop" i någon form sätts stoppords-markören till true,
+            // raden tas bort från rad-räknaren och en tom string returneras
+            stop = true;
+            rows--;
+            return "";
+
+        } else if (text.contains("stop") || text.contains("stopp") || text.contains("Stop") || text.contains("Stopp")) {
+            // Om texten innehåller ordet "stop" i någon form ska
+            // stopp-ordet och ev efterkommande text tas bort från texten
+            // Först sätts stoppords-markören till true,
+            // sedan tar vi reda på vilket av stopp-orden som används i texten: stop, stopp, Stop, Stopp
+            stop = true;
             if (text.contains("stop")) {
                 stopWord = "stop";
-            }
-            if (text.contains("stopp")) {
+            } else if (text.contains("stopp")) {
                 stopWord = "stopp";
-            }
-            if (text.contains("Stop")) {
+            } else if (text.contains("Stop")) {
                 stopWord = "Stop";
-            }
-            if (text.contains("Stopp")) {
+            } else if (text.contains("Stopp")) {
                 stopWord = "Stopp";
+            } else {
+                stopWord = "";
             }
-            stop = true;
-            String[] stripStop = text.split(stopWord);
-            return stripStop[0];
+            // Texten delas upp i en array
+            // Vi tar reda på vilken position stopp-ordet har i arrayen
+            // Sedan bygger vi ihop texten igen med allt som finns i arrayen före stopp-ordet
+            // och separerar orden med blanksteg
+            // Om stopp-ordet kommer först i arrayen ska den raden tas bort från rad-räknaren
+            // Sist returneras texten
+            String[] stripStop = text.split(" ");
+            text="";
+            for (int i = 0;i<stripStop.length;i++) {
+                if (!stripStop[i].equals(stopWord)) {
+                    text = text + " " + stripStop[i];
+                }else{
+                    if (i==0){
+                        rows--;
+                    }
+                    break;
+                }
+            }
+            return text.trim() ;
         } else {
+            // Om det inte finns något stopp-ord i texten sätts stoppord-markören till false
+            // och ursprungstexten returneras
             stop = false;
-            return text;
+            return text.trim();
         }
     }
 
     public int charCount() {
 
+        chars = text.length();
         return chars;
     }
 
@@ -89,13 +115,13 @@ public class HandleText {
 
     public int wordsTotal() {
 
-        String[] wordArray = text.split(" ");
-        if (stop == true) {
-            words = wordArray.length - 1;
-        } else {
+        if (!text.isEmpty()) {
+            String[] wordArray = text.split(" ");
             words = wordArray.length;
+            return words;
+        }else{
+            return 0;
         }
-        return words;
     }
 
 

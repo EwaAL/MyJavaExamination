@@ -17,18 +17,23 @@ public class HandleTextTest {
         //Testar funktionen som räknar antal tecken i strängen
 
         String inputString = "Jag testar att skriva en massa ord stop";
-        HandleText myTextHandler = new HandleText(inputString);
+        HandleText myTextHandler = new HandleText();
+        myTextHandler.readLine(inputString);
 
-        assertEquals(35,myTextHandler.charCount);
+        assertEquals(35,myTextHandler.charCount());
     }
     @Test
     public void testRowCount(){
         //Testar funktionen som kontrollerar antalet rader från inläsningen
         String inputString = "Jag testar att skriva en massa ord stop";
         int rows=2;
-        HandleText myTextHandler = new HandleText(inputString);
+        HandleText myTextHandler = new HandleText();
+        myTextHandler.readLine("Jag testar");
+        myTextHandler.readLine("att skriva");
+        myTextHandler.readLine("en massa ord");
+        myTextHandler.readLine("stop");
 
-        assertEquals(2,myTextHandler.rowCount);
+        assertEquals(3,myTextHandler.rowCount());
 
     }
     @Test
@@ -39,9 +44,9 @@ public class HandleTextTest {
 
         String inputString = "Jag testar att skriva en massa ord stop";
         int rows=2;
-        HandleText myTextHandler = new HandleText(inputString);
+        HandleText myTextHandler = new HandleText();
 
-        assertEquals("testar", myTextHandler.getLongestWord();
+        assertEquals("testar", myTextHandler.getLongestWord());
     }
     @Test
     public void testWordsTotal(){
@@ -50,7 +55,7 @@ public class HandleTextTest {
 
         String inputString = "Jag testar att skriva en massa ord stop";
         int rows=2;
-        HandleText myTextHandler = new HandleText(inputString);
+        HandleText myTextHandler = new HandleText();
 
         assertEquals(7, myTextHandler.wordsTotal());
     }
@@ -60,9 +65,8 @@ public class HandleTextTest {
         //testar funktionen som ska upptäcka om ordet "stop" har skrivits
 
         String inputString = "Jag testar att skriva en massa ord stop";
-        int rows=2;
-        HandleText myTextHandler = new HandleText(inputString);
+        HandleText myTextHandler = new HandleText();
 
-        assertEquals(true, myTextHandler.stopWord());
+        assertEquals(true,myTextHandler.readLine(inputString));
     }
 }

@@ -1,21 +1,27 @@
 
 public class HandleText {
 
+    /*
+     Denna klass:
+     - Håller koll på om ett stopp-ord finns i en text
+     - Håller koll på antal inlästa rader fram till ett stopp-ord
+     - Räknar antal tecken i en text fram till ett stopp-ord
+     - Räknar antalet ord i en text fram till ett stopp-ord
+     - Letar upp det längsta ordet i en text. Om det finns flera ord
+       som är lika långa väljs det första ordet ut
+    */
 
-    //Räkna raderna
-    // Räkna antal tecken (ej ordet STOP)
-    // Räkna antal ord (ej ordet STOP)
-    //Ha koll på det längsta ordet (ej ordet STOP)
-    //Har koll på om användaren har skrivit ordet stop eller inte
+    //**************************************************************************************
+    private String text; //den inlästa texten
+    private int rows; //antalet inlästa text-rader minus rad som börjar med stopp-ord
+    private int chars; //antal tecken i en text fram till stoppord
+    private int words;//antal ord i en text fram till stoppord
+    private String longestWord;//längsta ordet i en text
+    private boolean stop;//vid true ska ingen mer rad läsas in
 
-    private String text;
-    private int rows;
-    private int chars;
-    private int words;
-    private String longestWord;
-    private boolean stop;
-
+    //*************************************************************************************
     public HandleText() {
+        //Grundvärden som sätts när konstruktorn initieras
         rows = 0;
         text = "";
         longestWord = "";
@@ -24,104 +30,148 @@ public class HandleText {
         stop = false;
     }
 
+    //*******************************************************************************************
     public boolean readLine(String inputString) {
+        /*
+         - Tar emot den inlästa textraden
+         - Räknar upp radräknaren
+         - Kollar efter stopp-ord i texten, får tillbaka tom sträng vid avsaknad av stopp-ord
+         - Om textsträngen inte är tom läggs strängen till i klassens text-attribut
+         - Returnerar boolean som visar om mer text ska läsas in eller inte
+        */
 
         rows++;
-        inputString = checkStopWord(inputString);
-        if (!inputString.isEmpty()) {
-            text = text + inputString;
-        }
+        inputString = formatText(inputString);
+        if (!inputString.isEmpty()) text = text + inputString;
         return stop;
     }
 
-    private String checkStopWord(String text) {
+    //**************************************************************************************
+    private String formatText(String text) {
+        /*
+         - Tar emot texten som ska formateras
+         - Tar reda på om det finns ett stopp-ord. Tom variabel = inget stopp-ord
+         - Om det inte finns något stopp-ord sätts stoppords-markören till false
+         - Om det finns ett stopp-ord:
+                - Stoppords-markören sätts till true
+                - Texten delas upp i en array
+                - Textvariabeln töms så den kan återanvändas med ny (strippad) text
+                - Arrayen loopas fram till stopp-ordet
+                - Ord som inte är ett stopp-ord sparas tillbaka i textvariabeln separerat med blanksteg
+                - Om ordet är ett stopp-ord och det är första ordet i arrayen minskas radräknaren med 1 och inget ord sparas
+                - Loopen avbryts
+         - Den strippade och trimmade texten skickas tillbaka
+        */
 
-        String stopWord = "";
-
-        if (text.equals("stop") || text.equals("stopp") || text.equals("Stop") || text.equals("Stopp")) {
-            //om texten endast består av ordet "stop" i någon form sätts stoppords-markören till true,
-            // raden tas bort från rad-räknaren och en tom string returneras
+        String stopWord = existStopWord(text);
+        if (stopWord.isEmpty()){
+            stop = false;
+            text = text + " ";
+        }
+        else {
             stop = true;
-            rows--;
-            return "";
-
-        } else if (text.contains("stop") || text.contains("stopp") || text.contains("Stop") || text.contains("Stopp")) {
-            // Om texten innehåller ordet "stop" i någon form ska
-            // stopp-ordet och ev efterkommande text tas bort från texten
-            // Först sätts stoppords-markören till true,
-            // sedan tar vi reda på vilket av stopp-orden som används i texten: stop, stopp, Stop, Stopp
-            stop = true;
-            if (text.contains("stop")) {
-                stopWord = "stop";
-            } else if (text.contains("stopp")) {
-                stopWord = "stopp";
-            } else if (text.contains("Stop")) {
-                stopWord = "Stop";
-            } else if (text.contains("Stopp")) {
-                stopWord = "Stopp";
-            } else {
-                stopWord = "";
-            }
-            // Texten delas upp i en array
-            // Vi tar reda på vilken position stopp-ordet har i arrayen
-            // Sedan bygger vi ihop texten igen med allt som finns i arrayen före stopp-ordet
-            // och separerar orden med blanksteg
-            // Om stopp-ordet kommer först i arrayen ska den raden tas bort från rad-räknaren
-            // Sist returneras texten
             String[] stripStop = text.split(" ");
-            text="";
-            for (int i = 0;i<stripStop.length;i++) {
-                if (!stripStop[i].equals(stopWord)) {
-                    text = text + " " + stripStop[i];
-                }else{
-                    if (i==0){
-                        rows--;
-                    }
+            text = "";
+            for (int i = 0; i < stripStop.length; i++) {
+                if (!stripStop[i].equals(stopWord)) text = text.trim() + " " + stripStop[i];
+                else {
+                    if (i == 0) rows--;
                     break;
                 }
             }
-            return text.trim() ;
+        }
+        return text;
+    }
+
+    //*********************************************************************************************
+    private String existStopWord(String text) {
+        /*
+         - Tar emot texten som ska kontrolleras för stopp-ord
+         - Om det finns något stopp-ord returneras detta
+         - Om det inte finns något stopp-ord returneras tomt
+        */
+
+        if (text.contains("stopp")) {
+            return "stopp";
+        } else if (text.contains("stop")) {
+            return "stop";
+        } else if (text.contains("Stopp")) {
+            return "Stopp";
+        } else if (text.contains("Stop")) {
+            return "Stop";
         } else {
-            // Om det inte finns något stopp-ord i texten sätts stoppord-markören till false
-            // och ursprungstexten returneras
-            stop = false;
-            return text.trim();
+            return "";
         }
     }
 
-    public int charCount() {
+    //*************************************************************************************
+    public int getAmountOfChars() {
+        // - Tar reda på textens längd och returnerar antalet tecken
 
-        chars = text.length();
+        chars = text.trim().length();
         return chars;
     }
 
-    public int rowCount() {
+    //*************************************************************************************
+    public int getAmountOfRows() {
+        // - Returnerar antalet inlästa rader exkl rad som börjar med stopp-ord
 
         return rows;
     }
 
+    //**************************************************************************************
     public String getLongestWord() {
+        /*
+         - Skapar variabel för längden och sätter den till 0
+         - Skapar en array av orden i texten
+         - Loopar igenom arrayen och jämför ordens längd med variabeln för längd
+         - Om ordet i arrayen är längre än summan i variabeln ändras variabelns summa till ordets längd
+           och ordet sparas som det längsta ordet (som alltså byts ut om det kommer ett längre ord)
+         - Längsta ordet returneras. Om det finns flera ord med samma längd returneras det första längsta ordet
+        */
 
         int length = 0;
         String[] wordArray = text.split(" ");
-        for (int i = 0; i < wordArray.length; i++) {
-            if (length < wordArray[i].chars().sum()) {
-                length = wordArray[i].chars().sum();
-                longestWord = wordArray[i];
+        for (String s : wordArray) {
+            if (length < s.chars().sum()) {
+                length = s.chars().sum();
+                longestWord = s;
             }
         }
+//        for (int i = 0; i < wordArray.length; i++) {
+//            if (length < wordArray[i].chars().sum()) {
+//                length = wordArray[i].chars().sum();
+//                longestWord = wordArray[i];
+//            }
+//        }
+
         return longestWord;
     }
+    //******************************************************************************
 
-    public int wordsTotal() {
+    public int getAmountOfWords() {
+        /*
+         - Om det finns text delas den upp i en array
+         - Längden på arrayen sparas i variabeln för antal ord
+         - Om det inte finns någon text sätts variabeln för antal ord till 0
+         - Antalet ord returneras
+        */
 
         if (!text.isEmpty()) {
             String[] wordArray = text.split(" ");
             words = wordArray.length;
-            return words;
-        }else{
-            return 0;
+        } else {
+            words = 0;
         }
+        return words;
+    }
+    //**************************************************************************************
+    public boolean getStopNow(){
+        // - Skickar tillbaka stop-boolean
+        return stop;
+    }
+    public String getText(){
+        return text;
     }
 
 

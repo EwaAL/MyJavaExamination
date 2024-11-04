@@ -35,45 +35,47 @@ public class HandleText {
         /*
          - Tar emot den inlästa textraden
          - Räknar upp radräknaren
-         - Kollar efter stopp-ord i texten, får tillbaka tom sträng vid avsaknad av stopp-ord
-         - Om textsträngen inte är tom läggs strängen till i klassens text-attribut
+         - Bygger ihop en ny String, utan stopp-ord
+         - Om det första ordet som läses in är ett stopp-ord kommer den nybyggda Stringen vara tom
+           (eftersom varken text efter stopp-ordet eller själva stopp-ordet ska användas)
+         - Om den nybyggda Stringen inte är tom adderas nya Stringen till klassens text-attribut
          - Returnerar boolean som visar om mer text ska läsas in eller inte
         */
 
         rows++;
-        inputString = formatText(inputString);
+        inputString = buildNewString(inputString);
         if (!inputString.isEmpty()) text = text + inputString;
         return stop;
     }
 
     //**************************************************************************************
-    private String formatText(String text) {
+    private String buildNewString(String text) {
         /*
-         - Tar emot texten som ska formateras
+         - Tar emot texten som ska byggas om
          - Tar reda på om det finns ett stopp-ord. Tom variabel = inget stopp-ord
-         - Om det inte finns något stopp-ord sätts stoppords-markören till false
+         - Vid tom variabel sätts stoppords-markören till false och ett blanksteg läggs till i textsträngen
          - Om det finns ett stopp-ord:
                 - Stoppords-markören sätts till true
-                - Texten delas upp i en array
-                - Textvariabeln töms så den kan återanvändas med ny (strippad) text
-                - Arrayen loopas fram till stopp-ordet
+                - Texten delas upp i en array utifrån blanksteg
+                - Textvariabeln töms så den kan återanvändas till nya texten utan stopp-ord
+                - Textarrayen loopas fram till stopp-ordet
                 - Ord som inte är ett stopp-ord sparas tillbaka i textvariabeln separerat med blanksteg
                 - Om ordet är ett stopp-ord och det är första ordet i arrayen minskas radräknaren med 1 och inget ord sparas
                 - Loopen avbryts
-         - Den strippade och trimmade texten skickas tillbaka
+         - Den nya texten skickas tillbaka
         */
 
-        String stopWord = existStopWord(text);
+        String stopWord = getStopWord(text);
         if (stopWord.isEmpty()){
             stop = false;
-            text = text + " ";
+            text = " " + text;
         }
         else {
             stop = true;
             String[] stripStop = text.split(" ");
             text = "";
             for (int i = 0; i < stripStop.length; i++) {
-                if (!stripStop[i].equals(stopWord)) text = text.trim() + " " + stripStop[i];
+                if (!stripStop[i].equals(stopWord)) text = text + " " + stripStop[i];
                 else {
                     if (i == 0) rows--;
                     break;
@@ -84,10 +86,10 @@ public class HandleText {
     }
 
     //*********************************************************************************************
-    private String existStopWord(String text) {
+    private String getStopWord(String text) {
         /*
          - Tar emot texten som ska kontrolleras för stopp-ord
-         - Om det finns något stopp-ord returneras detta
+         - Om det finns ett stopp-ord returneras detta
          - Om det inte finns något stopp-ord returneras tomt
         */
 
@@ -106,7 +108,7 @@ public class HandleText {
 
     //*************************************************************************************
     public int getAmountOfChars() {
-        // - Tar reda på textens längd och returnerar antalet tecken
+        // - Tar reda på textens längd utan blanksteg i början och slutet, och returnerar antalet tecken
 
         chars = text.trim().length();
         return chars;
@@ -114,7 +116,7 @@ public class HandleText {
 
     //*************************************************************************************
     public int getAmountOfRows() {
-        // - Returnerar antalet inlästa rader exkl rad som börjar med stopp-ord
+        // - Returnerar antalet inlästa rader
 
         return rows;
     }
@@ -123,7 +125,7 @@ public class HandleText {
     public String getLongestWord() {
         /*
          - Skapar variabel för längden och sätter den till 0
-         - Skapar en array av orden i texten
+         - Skapar en String-array av orden i texten
          - Loopar igenom arrayen och jämför ordens längd med variabeln för längd
          - Om ordet i arrayen är längre än summan i variabeln ändras variabelns summa till ordets längd
            och ordet sparas som det längsta ordet (som alltså byts ut om det kommer ett längre ord)
@@ -132,19 +134,12 @@ public class HandleText {
 
         int length = 0;
         String[] wordArray = text.split(" ");
-        for (String s : wordArray) {
-            if (length < s.chars().sum()) {
-                length = s.chars().sum();
+
+        for (String s : wordArray)
+            if (length < s.length()) {
+                length = s.length();
                 longestWord = s;
             }
-        }
-//        for (int i = 0; i < wordArray.length; i++) {
-//            if (length < wordArray[i].chars().sum()) {
-//                length = wordArray[i].chars().sum();
-//                longestWord = wordArray[i];
-//            }
-//        }
-
         return longestWord;
     }
     //******************************************************************************
@@ -158,6 +153,7 @@ public class HandleText {
         */
 
         if (!text.isEmpty()) {
+            text=text.trim();
             String[] wordArray = text.split(" ");
             words = wordArray.length;
         } else {
@@ -166,13 +162,17 @@ public class HandleText {
         return words;
     }
     //**************************************************************************************
-    public boolean getStopNow(){
-        // - Skickar tillbaka stop-boolean
+    public boolean getStopStatus(){
+        // - Returnerar boolean som visar om mer text ska läsas in eller inte
         return stop;
     }
+
+    //**************************************************************************************
     public String getText(){
+        // - Returnerar den inlästa texten
         return text;
     }
+    //**************************************************************************************
 
 
 }

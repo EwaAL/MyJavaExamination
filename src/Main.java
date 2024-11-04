@@ -18,7 +18,7 @@ public class Main {
         do{
             System.out.println("Skriv din text här: ");
             myTextHandler.readLine(myScan.nextLine());
-        }while(!myTextHandler.getStopNow());
+        }while(!myTextHandler.getStopStatus());
 
         System.out.println("Du har skrivit " + myTextHandler.getAmountOfRows() + " antal rader");
         System.out.println("Du har skrivit " + myTextHandler.getAmountOfWords() + " antal ord");

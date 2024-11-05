@@ -16,7 +16,7 @@ public class HandleText {
     private int rows; //antalet inlästa text-rader minus rad som börjar med stopp-ord
     private int chars; //antal tecken i en text fram till stoppord
     private int words;//antal ord i en text fram till stoppord
-    private String longestWord;//längsta ordet i en text
+    private String longestWord;//längsta ordet/orden i en text
     private boolean stop;//vid true ska ingen mer rad läsas in
 
     //*************************************************************************************
@@ -128,8 +128,10 @@ public class HandleText {
          - Skapar en String-array av orden i texten
          - Loopar igenom arrayen och jämför ordens längd med variabeln för längd
          - Om ordet i arrayen är längre än summan i variabeln ändras variabelns summa till ordets längd
-           och ordet sparas som det längsta ordet (som alltså byts ut om det kommer ett längre ord)
-         - Längsta ordet returneras. Om det finns flera ord med samma längd returneras det första längsta ordet
+           och ordet sparas som det längsta ordet (skriver över tidigare ord)
+         - Om ordet i arrayen är av samma längd som summan i variabeln läggs ordet till i variabeln
+           med ett blanksteg mellan
+         - Längsta ordet (eller sträng med längsta orden) returneras
         */
 
         int length = 0;

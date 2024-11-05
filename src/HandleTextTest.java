@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 //*********************************************************************************
 public class HandleTextTest {
@@ -11,7 +10,7 @@ public class HandleTextTest {
      - om beräkningen av antalet rader blir korrekt; int
      - om beräkningen av antalet ord blir korrekt; int
      - om beräkningen av antalet tecken blir korrekt; int
-     - om längsta ordet plockas ut; String
+     - om längsta ordet/orden plockas ut; String
     */
 
 
@@ -71,9 +70,7 @@ public class HandleTextTest {
     @Test
     public void testLongestWord() {
         /*
-         - Testar att det går att ta ut det längsta ordet från texten.
-         - Om flera ord är lika långa och dessa ord är de längsta orden väljs
-           det första av de längsta orden ut.
+         - Testar att det går att ta ut det längsta ordet/orden från texten.
          - Enbart ord före eventuellt stopp-ord tas med i urvalet
          - Det görs ingen kontroll av stor och liten första-bokstav
            förutom för stopp-ordet. Expected måste alltså vara exakt i samma
@@ -84,11 +81,10 @@ public class HandleTextTest {
         HandleText myTextHandler = new HandleText();
         myTextHandler.readLine(inputString);
 
-        assertEquals("testar", myTextHandler.getLongestWord());
+        assertEquals("testar skriva", myTextHandler.getLongestWord());
     }
 
     //*******************************************************************************
-//*********************************************************************************
     @Test
     public void testStopWord() {
         /*
@@ -101,4 +97,5 @@ public class HandleTextTest {
 
         assertEquals(true,myTextHandler.readLine(inputString));
     }
+    //*********************************************************************************
 }

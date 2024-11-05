@@ -14,19 +14,6 @@ public class HandleTextTest {
      - om längsta ordet plockas ut; String
     */
 
-    //*********************************************************************************
-    @Test
-    public void testStopWord() {
-        /*
-        testar om ordet "stop" finns i texten
-        det går att byta ut ordet "stop" till "stopp", "Stop" eller "Stopp"
-        */
-
-        String inputString = "Jag testar att skriva en massa ord stop";
-        HandleText myTextHandler = new HandleText();
-
-        assertTrue(myTextHandler.readLine(inputString));
-    }
 
     //********************************************************************************
     @Test
@@ -99,5 +86,19 @@ public class HandleTextTest {
 
         assertEquals("testar", myTextHandler.getLongestWord());
     }
-//*******************************************************************************
+
+    //*******************************************************************************
+//*********************************************************************************
+    @Test
+    public void testStopWord() {
+        /*
+        testar om ordet "stop" finns i texten
+        det går att byta ut ordet "stop" till "stopp", "Stop" eller "Stopp"
+        */
+
+        String inputString = "Jag testar att skriva en massa ord stop";
+        HandleText myTextHandler = new HandleText();
+
+        assertEquals(true,myTextHandler.readLine(inputString));
+    }
 }

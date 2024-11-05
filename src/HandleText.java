@@ -139,7 +139,7 @@ public class HandleText {
             if (length < s.length()) {
                 length = s.length();
                 longestWord = s;
-            }
+            }else if (length == s.length()) longestWord = longestWord + " " + s;
         return longestWord;
     }
     //******************************************************************************

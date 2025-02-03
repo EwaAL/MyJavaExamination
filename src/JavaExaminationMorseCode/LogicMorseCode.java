@@ -10,8 +10,6 @@ public class LogicMorseCode {
     //Skapa minst två felhanteringar i systemet som
     //hanterar två saker som användaren kan göra som går
     //utanför det vanliga användandet av systemet
-    //Flera bokstäver skall gå att hantera men separation
-    //av ord behöver inte hanteras
 
     private String textIn;
     private String textOut;
@@ -27,9 +25,9 @@ public class LogicMorseCode {
 
         textIn = "";
         textOut = "";
-        if (!text.isEmpty()){
+        if (!text.isEmpty()) {
             saveTextIn(text);
-        }else {
+        } else {
             saveTextIn(this.readText(4));
         }
         return getTextReadyToPrintOut();
@@ -140,7 +138,7 @@ public class LogicMorseCode {
                     break;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(getMessage(11));
         }
         textOut = this.getMessage(7) + textOut;
@@ -170,14 +168,14 @@ public class LogicMorseCode {
         int count = morseSignsIn.length;
         boolean dataOK = false;
 
-       try {
-           for (int i = 0; i < count; i++) {
-               String morse = morseSignsIn[i];
-               textOut = textOut + myData.getChar(morse);
-           }
-       } catch (Exception e) {
-           throw new RuntimeException(e);
-       }
+        try {
+            for (int i = 0; i < count; i++) {
+                String morse = morseSignsIn[i];
+                textOut = textOut + myData.getChar(morse);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         if (!textOut.isEmpty()) { // kollar att det finns en text
             textOut = getMessage(8) + textOut;
@@ -187,9 +185,9 @@ public class LogicMorseCode {
     }
 
     private void splitText() {
-        if(textIn.contains(" ")) {
+        if (textIn.contains(" ")) {
             String[] temp = textIn.split(" ");
-            textIn="";
+            textIn = "";
             for (int i = 0; i < temp.length; i++) {
                 textIn = textIn + temp[i];
             }
@@ -212,21 +210,18 @@ public class LogicMorseCode {
 
         String answer = this.readText(i);
         boolean yesNo = false;
-        boolean done = false;
 
-        do {
-            if (answer.equalsIgnoreCase("Y")) {
-                yesNo = true;
-                break;
-            } else if (answer.equalsIgnoreCase("N")) {
-                yesNo = false;
-                boolean test = this.printOut(10);
-                break;
-            } else {
-                boolean test = this.printOut(9);
-                answer = this.readText(i);
-            }
-        }while (!done);
+        if (answer.equalsIgnoreCase("Y")) {
+            yesNo = true;
+        } else if (answer.equalsIgnoreCase("N")) {
+            yesNo = false;
+            boolean test = this.printOut(10);
+
+        } else {
+            boolean test = this.printOut(9);
+            answer = this.readText(i);
+        }
+
         return yesNo;
     }
 
@@ -264,8 +259,9 @@ public class LogicMorseCode {
                         "for yes or N for no, okay, dear.";
                 break;
             case 10:
-                message = "Thanks for stopping by, darling, " +
-                        "have a niiiice day!";
+                message = "" +
+                        "*** Thanks for stopping by, darling, " +
+                        "have a niiiice day! ***";
                 break;
             case 11:
                 message = "An unexpected error occurred," +
@@ -278,8 +274,9 @@ public class LogicMorseCode {
         }
         return message;
     }
-    public void welcome(){
-        for (int i = 1;i<=3;i++){
+
+    public void welcome() {
+        for (int i = 1; i <= 3; i++) {
             boolean test = this.printOut(i);
         }
     }

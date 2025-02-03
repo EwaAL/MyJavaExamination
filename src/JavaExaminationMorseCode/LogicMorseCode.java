@@ -1,95 +1,287 @@
 
 package JavaExaminationMorseCode;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Scanner;
 
 public class LogicMorseCode {
-    //Skriv ett program som gör om morsekod till engelska
-    //och engelska till morsekod
-    //❖ Skapa minst två felhanteringar i systemet som
+
+    //Skapa minst två felhanteringar i systemet som
     //hanterar två saker som användaren kan göra som går
     //utanför det vanliga användandet av systemet
-    //Använd den internationella morsekoden (se slide 6)
-    //för bokstäverna A till Z
-    //❖ Korta och långa signaler ska representeras med
-    //punkt (.) och bindestreck (-)
-    //❖ F = ..-.
-    //❖ Flera bokstäver skall gå att hantera men separation
+    //Flera bokstäver skall gå att hantera men separation
     //av ord behöver inte hanteras
-    //❖ …. . .--- = HEJ
-    //❖ .... . .-.. .-.. --- .-- --- .-. .-.. -.. = HELLOWORLD
-    //❖ HELLO WORLD = .... . .-.. .-.. --- .-- --- .-. .-.. -..
-    private char[] splitTextToUse;
-    private String textToUse;
+
+    private String textIn;
+    private String textOut;
+    private char[] lettersIn;
+    private String[] morseSignsIn;
     private ValidSigns myData = new ValidSigns();
 
-    public boolean printOut(String text) {
-        System.out.println(text);
-        return true;
+    //***************************************************************
+    public boolean handleInput(String text) {
+        // - texten läses in och sparas i en klassvariabel.
+        // - den inlästa texten omvandlas för att kunna skrivas ut
+        // - om allt gått bra skickas true tillbaka.
+
+        textIn = "";
+        textOut = "";
+        if (!text.isEmpty()){
+            saveTextIn(text);
+        }else {
+            saveTextIn(this.readText(4));
+        }
+        return getTextReadyToPrintOut();
     }
 
-    public String readText() {
+    //**************************************************************
+    private String readText(int i) {
+        // - läser in text från prompten och returnerar den
 
-        String text = "";
-
+        String message = "";
         Scanner myScan = new Scanner(System.in);
-        System.out.println("Write something in English or in Morse Code");
-        text = myScan.nextLine();
-
-        return text;
+        message = this.getMessage(i);
+        System.out.println(message);
+        return myScan.nextLine();
     }
 
-
-    public void splitText(String text) {
-        splitTextToUse=text.toCharArray();
+    //**************************************************************
+    private void saveTextIn(String text) {
+        // - sparar input i en klassvariabel
+        textIn = text;
     }
 
-    public int isEngOrMorse(String text){
-        if (text.contains(".")||text.contains("-")){
-            return 2;
-        }else{
-            return 1;
+    //**************************************************************
+    private boolean getTextReadyToPrintOut() {
+        // - kollar om texten är morsekod eller engelska
+        // - hanterar texten utifrån om det är morse eller engelska
+        // - om allt gått bra returneras true
+
+        boolean valid = false;
+        int textType = this.engOrMorse(textIn);
+        switch (textType) {
+            case 1:
+                //om det är morsetecken
+                this.splitMorse();
+                valid = this.convertMorse();
+                break;
+            case 2:
+                //om det är bokstäver
+                this.splitText();
+                valid = this.convertEng();
+                break;
+            case 3:
+                // om det är både morsetecken och bokstäver
+                valid = false;
+                break;
+            case 4:
+                // om det varken är morsetecken eller bokstäver
+                valid = false;
+                break;
+            default:
+                //TODO! vet inte vad som ska hända här
         }
-    }
-    public void morseToEng() {
-
+        return valid;
     }
 
-    public String engToMorse() {
-    // omvandlar den inmatade texten till morsekod
-        //loopa igenom arrayen med splitText och hämta morsetecknen
-        //bygg ihop en sträng av varje morsetecken
-        //separera tecknen med mellanslag
-        String morseText="";
-        ValidSigns myData = new ValidSigns();
-        myData.Init();
-        for(int i=0;i<splitTextToUse.length;i++){
-            String morseSign = myData.getMorseCode(splitTextToUse[i]);
-            morseText = morseText + morseSign;
+    //*****************************************************************
+    private int engOrMorse(@NotNull String text) {
+        // - kollar om texten innehåller morsetecken och/eller bokstäver
+        // - returnerar 1 för morsetecken
+        // - returnerar 2 för bokstäver
+        // - returnerar 3 om det finns både morsetecken och bokstäver
+        // - returnerar 4 om det varken finns morsetecken eller bokstäver
+
+        boolean letters = false;
+        boolean morse = false;
+
+        if (text.contains(".") || text.contains("-")) {
+            morse = true;
         }
-        return morseText;
-    }
 
-    public boolean validText() {
-        int charCount = splitTextToUse.length;
-        myData.Init();
-        boolean isTrue = false;
-
-        for (int i=0;i<charCount;i++) {
-            char c = splitTextToUse[i];
-            //gör om till versal om det är en bokstav
-            if (Character.isLetter(c)){
-                c=Character.toUpperCase(c);
-            }
-            isTrue = myData.isValid(c);
-            if (!isTrue) {
+        for (char c : text.toCharArray()) {
+            if (Character.isLetter(c)) {
+                letters = true;
                 break;
             }
         }
-        return isTrue;
+        if (morse && !letters) {
+            return 1;
+        } else if (letters && !morse) {
+            return 2;
+        } else if (letters && morse) {
+            return 3;
+        } else {
+            return 4;
+        }
     }
-    public void setTextToUse(String text){
-        textToUse=text;
+
+    //****************************************************************
+    private boolean convertEng() {
+        // - laddar arrayer i dataklassen med giltiga tecken
+        // - gör om tecknen till versaler, returnerar 1 om det inte gick
+        // - bygger ihop en ny, konverterad, text
+        // - om det går bra returneras true
+
+        myData.Init();
+        int count = lettersIn.length;
+        boolean dataOK = false;
+
+        try {
+            for (int i = 0; i < count; i++) {
+                char c = lettersIn[i]; // hämtar bokstav
+                c = this.getUpperCase(c);//gör om bokstav till versal
+                if (!(c == '1')) { // om inte 1 returneras byggs nya texten ihop
+                    textOut = textOut + myData.getMorseCode(c) + " ";
+                    dataOK = true;
+                } else {
+                    dataOK = false;
+                    break;
+                }
+            }
+        }catch (Exception e){
+            System.out.println(getMessage(11));
+        }
+        textOut = this.getMessage(7) + textOut;
+        return dataOK;
+    }
+
+    //****************************************************************
+    private char getUpperCase(char c) {
+        // - gör om en char till versal
+        // - skickar tillbaka tecknet som versal
+        // - om tecknet inte gick att omvandla skickas en etta tillbaka
+
+        char newC = '1';
+        if (Character.isLetter(c)) {
+            newC = Character.toUpperCase(c);
+        }
+        return newC;
+    }
+
+    //****************************************************************
+    private boolean convertMorse() {
+        // - laddar arrayer i dataklassen med giltiga tecken
+        // - bygger ihop en ny, konverterad, text
+        // - om det går bra returneras true
+
+        myData.Init();
+        int count = morseSignsIn.length;
+        boolean dataOK = false;
+
+       try {
+           for (int i = 0; i < count; i++) {
+               String morse = morseSignsIn[i];
+               textOut = textOut + myData.getChar(morse);
+           }
+       } catch (Exception e) {
+           throw new RuntimeException(e);
+       }
+
+        if (!textOut.isEmpty()) { // kollar att det finns en text
+            textOut = getMessage(8) + textOut;
+            dataOK = true;
+        }
+        return dataOK;
+    }
+
+    private void splitText() {
+        if(textIn.contains(" ")) {
+            String[] temp = textIn.split(" ");
+            textIn="";
+            for (int i = 0; i < temp.length; i++) {
+                textIn = textIn + temp[i];
+            }
+        }
+        lettersIn = textIn.toCharArray();
+    }
+
+    private void splitMorse() {
+        morseSignsIn = textIn.split(" ");
+    }
+
+    public boolean printOut(int i) {
+
+        String message = this.getMessage(i);
+        System.out.println(message);
+        return true;
+    }
+
+    public boolean tryAgain(int i) {
+
+        String answer = this.readText(i);
+        boolean yesNo = false;
+        boolean done = false;
+
+        do {
+            if (answer.equalsIgnoreCase("Y")) {
+                yesNo = true;
+                break;
+            } else if (answer.equalsIgnoreCase("N")) {
+                yesNo = false;
+                boolean test = this.printOut(10);
+                break;
+            } else {
+                boolean test = this.printOut(9);
+                answer = this.readText(i);
+            }
+        }while (!done);
+        return yesNo;
+    }
+
+    private String getMessage(int i) {
+
+        String message = "";
+        switch (i) {
+            case 1:
+                message = "Hi there, welcome to the MorseCodeConverter!";
+                break;
+            case 2:
+                message = "Please, remember, you can only use letters" +
+                        " a-z or Morse code, okay, dear.";
+                break;
+            case 3:
+                message = "Ready? Yay! Let's begin!";
+                break;
+            case 4:
+                message = "Please just write something: ";
+                break;
+            case 5:
+                message = "Say... Would you like to try again? Y/N";
+                break;
+            case 6:
+                message = textOut;
+                break;
+            case 7:
+                message = "Et voilá! The Morse code is: ";
+                break;
+            case 8:
+                message = "No secret messages here, darling... You wrote: ";
+                break;
+            case 9:
+                message = "Oooops! Please answer only with Y " +
+                        "for yes or N for no, okay, dear.";
+                break;
+            case 10:
+                message = "Thanks for stopping by, darling, " +
+                        "have a niiiice day!";
+                break;
+            case 11:
+                message = "An unexpected error occurred," +
+                        " but don't worry, I'll fix it very soon, " +
+                        "I'm sure!";
+                break;
+            case 12:
+                message = "Testing Printing Function";
+                break;
+        }
+        return message;
+    }
+    public void welcome(){
+        for (int i = 1;i<=3;i++){
+            boolean test = this.printOut(i);
+        }
     }
 }
 

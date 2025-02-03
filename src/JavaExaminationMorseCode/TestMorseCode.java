@@ -1,44 +1,40 @@
 
 package JavaExaminationMorseCode;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMorseCode {
     //skriv minst 5 JUnit-testfall
     LogicMorseCode myObj = new LogicMorseCode();
+    ValidSigns myData = new ValidSigns();
 
     @Test
-    public void testSplitText(){
-        //testa att det går att separera en String
-        myObj.splitText("Testing");
+    public void testHandleInput(){
+        assertTrue(myObj.handleInput("Testing"));
     }
     @Test
-    public void testValidText(){
-        //myObj.setTextToUse("Testing");
-        myObj.splitText("Test123?!");
-        boolean ok=myObj.validText();
-        assertTrue(!ok);
+    public void testValidLetter(){
+        assertFalse(myData.validLetter('?'));
     }
 
     @Test
     public void testPrintOut(){
         // testa att det går att skriva till prompten
-        String text = "Testing Printing Function";
-        assertTrue(myObj.printOut(text));
-
+        assertTrue(myObj.printOut(12));
     }
-
-
-
     @Test
-    public void testMorseToEng(){
-        //testa att det går att omvandla från morse till engelska
+    public void testGetChar(){
+        myData.Init();
+        char c = myData.getChar("...");
+        assertEquals('S', c);
     }
 
     @Test
-    public void testEngToMorse(){
-        //testa att det går att omvandla från engelska till morse
+    public void testGetMorseCode(){
+        myData.Init();
+        String morse = myData.getMorseCode('S');
+        assertEquals("...",morse)  ;
     }
 
 }

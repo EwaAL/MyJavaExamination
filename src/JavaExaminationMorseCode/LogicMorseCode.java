@@ -21,21 +21,26 @@ public class LogicMorseCode {
     public boolean handleInput(String text) {
         // - texten läses in och sparas i en klassvariabel.
         // - den inlästa texten omvandlas för att kunna skrivas ut
-        // - om allt gått bra skickas true tillbaka.
+        // - om allt gått bra returneras true
+        // - text som input ifall det kommer från testklassen
 
-        textIn = "";
-        textOut = "";
+        textIn = ""; // tömmer eventuell "gammal" text
+        textOut = ""; // -""-
         if (!text.isEmpty()) {
-            saveTextIn(text);
+            saveTextIn(text);// om testklassen skickar text
+                            // ska den användas istället
+                                // för användarinput
         } else {
-            saveTextIn(this.readText(4));
+            saveTextIn(this.readText(4));// läser in text
+                                            // o sparar den
         }
-        return getTextReadyToPrintOut();
+        return getTextReadyToPrintOut(); // bearbetar texten
+                                        // före utskrift
     }
-
     //**************************************************************
     private String readText(int i) {
         // - läser in text från prompten och returnerar den
+        // - input "i" avgör vilket meddelande som ska visas
 
         String message = "";
         Scanner myScan = new Scanner(System.in);
@@ -43,13 +48,11 @@ public class LogicMorseCode {
         System.out.println(message);
         return myScan.nextLine();
     }
-
     //**************************************************************
     private void saveTextIn(String text) {
-        // - sparar input i en klassvariabel
+        // - sparar input "text" i en klassvariabel
         textIn = text;
     }
-
     //**************************************************************
     private boolean getTextReadyToPrintOut() {
         // - kollar om texten är morsekod eller engelska
@@ -80,12 +83,12 @@ public class LogicMorseCode {
             default:
                 //TODO! vet inte vad som ska hända här
         }
-        return valid;
+        return valid; // true om texten gått att omvandla
     }
-
     //*****************************************************************
-    private int engOrMorse(@NotNull String text) {
-        // - kollar om texten innehåller morsetecken och/eller bokstäver
+    private int engOrMorse(String text) {
+        // - kollar om texten innehåller morsetecken
+        //   och/eller bokstäver
         // - returnerar 1 för morsetecken
         // - returnerar 2 för bokstäver
         // - returnerar 3 om det finns både morsetecken och bokstäver
@@ -194,19 +197,28 @@ public class LogicMorseCode {
         }
         lettersIn = textIn.toCharArray();
     }
-
+//**********************************************************
     private void splitMorse() {
+    // - delar upp morsekod i separata morsetecken
+    //   utifrån blanksteg
+
         morseSignsIn = textIn.split(" ");
     }
-
+//**********************************************************
     public boolean printOut(int i) {
-
-        String message = this.getMessage(i);
+    // - skriver ut meddelande
+    // - input "i" avgör meddelandets text
+        String message = this.getMessage(i); // hämtar text
+                                            // för utskrift
         System.out.println(message);
-        return true;
+        return true; // true för testklassens skull
     }
-
+//************************************************************
     public boolean tryAgain(int i) {
+    // - tar reda på om användaren vill fortsätta skriva in
+    //   ny text eller om programmet ska avslutas
+    // - inparameter avgör meddelandets text
+    // - returnerar true om användaren vill fortsätta
 
         String answer = this.readText(i);
         boolean yesNo = false;
@@ -224,17 +236,20 @@ public class LogicMorseCode {
 
         return yesNo;
     }
-
+//***********************************************************
     private String getMessage(int i) {
+    // - returnerar den text som ska skrivas i prompten
+    // - inparameter avgör vilken text som ska användas
 
         String message = "";
         switch (i) {
             case 1:
-                message = "Hi there, welcome to the MorseCodeConverter!";
+                message = "Hi there, welcome to the " +
+                        "MorseCodeConverter!";
                 break;
             case 2:
                 message = "Please, remember, you can only use letters" +
-                        " a-z or Morse code, okay, dear.";
+                        " a-z or Morse code, okay, hun.";
                 break;
             case 3:
                 message = "Ready? Yay! Let's begin!";
@@ -246,13 +261,13 @@ public class LogicMorseCode {
                 message = "Say... Would you like to try again? Y/N";
                 break;
             case 6:
-                message = textOut;
+                message = textOut; // omvandlad text
                 break;
             case 7:
                 message = "Et voilá! The Morse code is: ";
                 break;
             case 8:
-                message = "No secret messages here, darling... You wrote: ";
+                message = "No secret messages here, darlin'... You wrote: ";
                 break;
             case 9:
                 message = "Oooops! Please answer only with Y " +
@@ -260,7 +275,7 @@ public class LogicMorseCode {
                 break;
             case 10:
                 message = "" +
-                        "*** Thanks for stopping by, darling, " +
+                        "*** Thanks for stopping by, darlin', " +
                         "have a niiiice day! ***";
                 break;
             case 11:
@@ -274,8 +289,9 @@ public class LogicMorseCode {
         }
         return message;
     }
-
+//**********************************************************
     public void welcome() {
+    // - skriver ut välkomsttext när programmet startar
         for (int i = 1; i <= 3; i++) {
             boolean test = this.printOut(i);
         }

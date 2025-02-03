@@ -3,23 +3,25 @@ package JavaExaminationMorseCode;
 import java.util.HashMap;
 
 //*********************************************************************
-
-// Klass som håller reda på giltiga tecken, dvs bokstäverna A-Z och
-//  tecknen punkt och bindestreck till morsekoden
+// Klass som håller reda på giltiga tecken, dvs bokstäverna A-Z
+// och tecknen punkt och bindestreck till morsekoden. Översätter
+// också till/från morsekod
 //*********************************************************************
 public class ValidSigns {
     private HashMap<Character, String> letterToMorse = new HashMap<>();
     private HashMap<String, Character> morseToLetter = new HashMap<>();
     private char[] letterChars = new char[26];
-
+//**************************************************************
     public void Init() {
+    // - ser till att hashmaps och arrayer laddas med innehåll
         this.loadLetterToMorse();
         this.loadMorseToLetter();
         this.loadLetterChars();
     }
-
+//**************************************************************
     private void loadLetterToMorse() {
-        // laddar alla bokstäver med tillhörande morsekod
+    // - laddar alla bokstäver med tillhörande morsekod
+
         letterToMorse.put('A', ".-");
         letterToMorse.put('B', "-...");
         letterToMorse.put('C', "-.-.");
@@ -47,9 +49,9 @@ public class ValidSigns {
         letterToMorse.put('Y', "-.--");
         letterToMorse.put('Z', "--..");
     }
-
+//*************************************************************
     private void loadMorseToLetter() {
-        // laddar alla morsekoder med tillhörande bokstäver
+    // - laddar alla morsekoder med tillhörande bokstäver
         morseToLetter.put(".-", 'A');
         morseToLetter.put("-...", 'B');
         morseToLetter.put("-.-.", 'C');
@@ -77,8 +79,10 @@ public class ValidSigns {
         morseToLetter.put("-.--", 'Y');
         morseToLetter.put("--..", 'Z');
     }
-
+//*************************************************************
     private void loadLetterChars() {
+    // - laddar array med giltiga bokstäver
+
         letterChars[0] = 'A';
         letterChars[1] = 'B';
         letterChars[2] = 'C';
@@ -106,8 +110,9 @@ public class ValidSigns {
         letterChars[24] = 'Y';
         letterChars[25] = 'Z';
     }
-
+//************************************************************
     public String getMorseCode(char sign) {
+    // - returnerar morsekod utifrån inparameter
 
         String morseSign = "";
         try {
@@ -120,8 +125,9 @@ public class ValidSigns {
         }
         return morseSign;
     }
-
+//************************************************************
     public boolean validLetter(char c) {
+    // - returnerar true om inparametern är ett giltigt tecken
 
         boolean valid = false;
         for (char letterChar : letterChars) {
@@ -132,8 +138,9 @@ public class ValidSigns {
         }
         return valid;
     }
-
+//************************************************************
     public char getChar(String morseCode) {
+    // - returnerar bokstav utifrån inparameter
         return morseToLetter.get(morseCode);
     }
 }
